@@ -1,19 +1,25 @@
 import { useState } from "react";
-import { compact, first, includes, last, sample, some, times, uniq, without } from "lodash";
+import { compact, first, includes, last, sample, take, times, uniq, without } from "lodash";
 
 export default function Home() {
   const [text, setText] = useState("");
+  const [maxLength, setMaxLength] = useState(20);
+  const [rejections, setRejections] = useState([]);
   const [combinations, setCombinations] = useState([]);
   const [selections, setSelections] = useState([]);
 
   function combine(event) {
     event.preventDefault();
 
-    const words = uniq(text.split(/\s/g));
+    // Set existing in rejections
+    setRejections((rejections) => [...rejections, ...combinations]);
+
+    const words = uniq(compact(text.split(/\s/g)));
+    const numberMaxLength = parseInt(maxLength);
 
     const newCombinations = uniq(
       compact(
-        times(50, () => {
+        times(500, () => {
           const start = sample(words).toLowerCase();
           const end = sample(words).toLowerCase();
 
@@ -21,16 +27,19 @@ export default function Home() {
           if (last(start) === first(end)) return null;
 
           const combination = start + end;
-          if (combination.length > 20) return null;
 
           if (includes(selections, combination)) return null;
+          if (includes(combinations, combination)) return null;
+          if (includes(rejections, combination)) return null;
+
+          if (combination.length > numberMaxLength) return null;
 
           return combination;
         })
       )
     );
 
-    setCombinations(newCombinations);
+    setCombinations(take(newCombinations, 60));
   }
 
   function addSelection(selection) {
@@ -48,8 +57,21 @@ export default function Home() {
               <textarea className="form-control" value={text} onChange={(event) => setText(event.target.value)} />
             </div>
 
-            <div className="text-end">
-              <button className="btn btn-success">Combine</button>
+            <div className="d-flex">
+              <div className="flex-fill">
+                <div className="form-group">
+                  <input
+                    type="number"
+                    className="form-control"
+                    value={maxLength}
+                    onChange={(event) => setMaxLength(event.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="">
+                <button className="btn btn-success">Combine</button>
+              </div>
             </div>
           </form>
 
