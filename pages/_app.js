@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import "bootswatch/dist/morph/bootstrap.min.css";
+import "bootswatch/dist/lumen/bootstrap.min.css";
 import Head from "next/head";
 
 function MyApp({ Component, pageProps }) {

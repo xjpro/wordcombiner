@@ -47,6 +47,11 @@ export default function Home() {
     setCombinations((combinations) => without(combinations, selection));
   }
 
+  function clear() {
+    setRejections((rejections) => [...rejections, ...selections]);
+    setSelections([]);
+  }
+
   return (
     <div>
       <div className="row vh-100">
@@ -85,9 +90,14 @@ export default function Home() {
             ))}
           </div>
         </div>
-        <div className="col-2">
+        <div className="col-2 h-100">
           <h3>Selections</h3>
           <textarea className="form-control h-100" value={selections.join("\n")} />
+          <div>
+            <button className="btn btn-default" onClick={clear}>
+              Clear
+            </button>
+          </div>
         </div>
       </div>
     </div>
