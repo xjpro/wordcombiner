@@ -6,7 +6,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -15,8 +14,6 @@
     "react-dom": "18.0.0"
   },
   "devDependencies": {
-    "eslint": "8.13.0",
-    "eslint-config-next": "12.1.5",
     "husky": "7.0.0",
     "prettier": "2.6.2",
     "pretty-quick": "^3.1.3"
