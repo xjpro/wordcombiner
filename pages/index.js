@@ -5,14 +5,14 @@ export default function Home() {
   const [text, setText] = useState("");
   const [maxLength, setMaxLength] = useState(20);
   const [rejections, setRejections] = useState([]);
-  const [combinations, setCombinations] = useState([]);
+  const [activeCombinations, setActiveCombinations] = useState([]);
   const [selections, setSelections] = useState([]);
 
   function combine(event) {
     event.preventDefault();
 
-    // Set existing in rejections
-    setRejections((rejections) => [...rejections, ...combinations]);
+    // Move active combinations to rejections
+    setRejections((rejections) => [...rejections, ...activeCombinations]);
 
     const words = uniq(compact(text.split(/\s/g)));
     const numberMaxLength = parseInt(maxLength);
@@ -29,9 +29,8 @@ export default function Home() {
           const combination = start + end;
 
           if (includes(selections, combination)) return null;
-          if (includes(combinations, combination)) return null;
+          if (includes(activeCombinations, combination)) return null;
           if (includes(rejections, combination)) return null;
-
           if (combination.length > numberMaxLength) return null;
 
           return combination;
@@ -39,16 +38,16 @@ export default function Home() {
       )
     );
 
-    setCombinations(take(newCombinations, 60));
+    setActiveCombinations(take(newCombinations, 48));
   }
 
-  function addSelection(selection) {
-    setSelections((selections) => [...selections, selection]);
-    setCombinations((combinations) => without(combinations, selection));
+  function addSelection(combination) {
+    setSelections((selections) => [...selections, combination]);
+    setActiveCombinations((combinations) => without(combinations, combination)); // remove from active list
   }
 
   function clear() {
-    setRejections((rejections) => [...rejections, ...selections]);
+    setRejections((rejections) => [...rejections, ...selections]); // add all existing selections to rejections list
     setSelections([]);
   }
 
@@ -81,7 +80,7 @@ export default function Home() {
           </form>
 
           <div className="row row-cols-2 row-cols-md-6 g-1">
-            {combinations.map((combination) => (
+            {activeCombinations.map((combination) => (
               <div className="col">
                 <div className="card card-body" onClick={() => addSelection(combination)}>
                   {combination}
@@ -92,7 +91,7 @@ export default function Home() {
         </div>
         <div className="col-2 h-100">
           <h3>Selections</h3>
-          <textarea className="form-control h-100" value={selections.join("\n")} />
+          <textarea className="form-control" rows="20" value={selections.join("\n")} />
           <div>
             <button className="btn btn-default" onClick={clear}>
               Clear
