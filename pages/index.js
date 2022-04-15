@@ -43,7 +43,6 @@ export default function Home() {
 
   function addSelection(combination) {
     setSelections((selections) => [...selections, combination]);
-    setActiveCombinations((combinations) => without(combinations, combination)); // remove from active list
   }
 
   function clear() {
@@ -57,13 +56,23 @@ export default function Home() {
         <div className="col">
           <form className="mb-3" onSubmit={combine}>
             <div className="form-group">
-              <label>Words</label>
-              <textarea className="form-control" value={text} onChange={(event) => setText(event.target.value)} />
+              <div>
+                <label>Primary Words</label>
+                <div className="small">
+                  Important root words, typically nouns, one of which will always appear in every combination
+                </div>
+              </div>
+              <textarea
+                className="form-control"
+                value={text}
+                onChange={(event) => setText(event.target.value)}
+              />
             </div>
 
             <div className="d-flex">
               <div className="flex-fill">
-                <div className="form-group">
+                <div className="form-group d-flex">
+                  <label>Max Length</label>
                   <input
                     type="number"
                     className="form-control"
@@ -77,12 +86,14 @@ export default function Home() {
                 <button className="btn btn-success">Combine</button>
               </div>
             </div>
+
+            <div>{rejections.length} currently rejected</div>
           </form>
 
           <div className="row row-cols-2 row-cols-md-6 g-1">
             {activeCombinations.map((combination) => (
               <div className="col">
-                <div className="card card-body" onClick={() => addSelection(combination)}>
+                <div className={`card card-body ${includes(selections, combination) ? "text-muted" : ""}`} onClick={() => addSelection(combination)}>
                   {combination}
                 </div>
               </div>
