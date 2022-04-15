@@ -93,7 +93,7 @@ export default function Home() {
           <div className="row row-cols-2 row-cols-md-6 g-1">
             {activeCombinations.map((combination) => (
               <div className="col">
-                <div className={`card card-body ${includes(selections, combination) ? "text-muted" : ""}`} onClick={() => addSelection(combination)}>
+                <div className={`card card-body ${includes(selections, combination) ? "opacity-25" : ""}`} onClick={() => addSelection(combination)}>
                   {combination}
                 </div>
               </div>
